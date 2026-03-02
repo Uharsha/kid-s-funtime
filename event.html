@@ -1,0 +1,1459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kid-s-Funtime</title>
+  <style>
+    :root {
+      --bg1: #0ea5e9;
+      --bg2: #6366f1;
+      --card: rgba(255, 255, 255, 0.18);
+      --text: #f8fafc;
+      --yellow: #facc15;
+      --pink: #f472b6;
+      --green: #22c55e;
+      --shadow: 0 20px 42px rgba(15, 23, 42, 0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: clamp(12px, 2.2vw, 24px);
+      overflow-x: hidden;
+      font-family: "Comic Sans MS", "Trebuchet MS", sans-serif;
+      color: var(--text);
+      background: linear-gradient(135deg, var(--bg1), var(--bg2));
+      display: grid;
+      place-items: center;
+      transition: background 0.6s ease;
+    }
+
+    body.theme-dark {
+      color: #f8fafc;
+    }
+
+    body.theme-light {
+      color: #0f172a;
+    }
+
+    .floating-shapes::before,
+    .floating-shapes::after {
+      content: "";
+      position: fixed;
+      z-index: -2;
+      border-radius: 50%;
+      animation: float 8s ease-in-out infinite;
+    }
+
+    .floating-shapes::before {
+      width: 300px;
+      height: 300px;
+      left: -90px;
+      top: -80px;
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    .floating-shapes::after {
+      width: 220px;
+      height: 220px;
+      right: -70px;
+      bottom: -70px;
+      background: rgba(250, 204, 21, 0.3);
+      animation-delay: 2s;
+    }
+
+    .card {
+      width: min(980px, 100%);
+      background: var(--card);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 24px;
+      padding: clamp(14px, 2.4vw, 24px);
+      box-shadow: var(--shadow);
+      animation: popIn 0.7s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    body.theme-light .card {
+      background: rgba(255, 255, 255, 0.78);
+      border-color: rgba(15, 23, 42, 0.2);
+    }
+
+    h1 {
+      text-align: center;
+      margin: 6px 0 8px;
+      font-size: clamp(1.7rem, 3.4vw, 2.4rem);
+    }
+
+    .sub {
+      text-align: center;
+      margin: 0 0 16px;
+      color: #fef9c3;
+    }
+
+    .top-tools {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .speak-box {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+    }
+
+    input,
+    select,
+    button {
+      border: 0;
+      border-radius: 13px;
+      padding: 11px 14px;
+      font-size: 16px;
+      outline: none;
+      min-height: 44px;
+    }
+
+    input,
+    select {
+      background: rgba(255, 255, 255, 0.95);
+      color: #0f172a;
+    }
+
+    button {
+      cursor: pointer;
+      font-weight: 700;
+      background: #f8fafc;
+      color: #111827;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 9px 16px rgba(15, 23, 42, 0.2);
+    }
+
+    .mood-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(130px, 1fr));
+      gap: 10px;
+    }
+
+    #message {
+      text-align: center;
+      font-size: clamp(20px, 2.7vw, 30px);
+      min-height: 48px;
+      margin: 14px 0;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .surprise {
+      background: var(--yellow);
+    }
+
+    .game {
+      margin-top: 8px;
+      border: 1px dashed rgba(255, 255, 255, 0.55);
+      border-radius: 16px;
+      padding: 14px;
+      background: rgba(15, 23, 42, 0.18);
+    }
+
+    .extras {
+      margin-top: 14px;
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .extra-card {
+      background: rgba(255, 255, 255, 0.14);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 14px;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .extra-title {
+      margin: 0 0 6px;
+      font-size: 15px;
+      color: #fde68a;
+    }
+
+    .extra-value {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .plan-box {
+      margin-top: 14px;
+      border-radius: 16px;
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.14);
+      border: 1px solid rgba(255, 255, 255, 0.24);
+    }
+
+    .plan-box h3 {
+      margin: 0 0 8px;
+      color: #fde68a;
+    }
+
+    .plan-list {
+      margin: 0;
+      padding-left: 18px;
+      line-height: 1.6;
+    }
+
+    .speech-lab {
+      margin-top: 14px;
+      border-radius: 16px;
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.14);
+      border: 1px solid rgba(255, 255, 255, 0.24);
+    }
+
+    .speech-lab h3 {
+      margin: 0 0 10px;
+      color: #fde68a;
+    }
+
+    .speech-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .speech-range {
+      display: grid;
+      gap: 6px;
+      background: rgba(15, 23, 42, 0.18);
+      border-radius: 12px;
+      padding: 10px;
+    }
+
+    .speech-range label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      color: #fef9c3;
+    }
+
+    .speech-actions {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+    }
+
+    .challenge-box,
+    .animal-box {
+      margin-top: 14px;
+      border-radius: 16px;
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.14);
+      border: 1px solid rgba(255, 255, 255, 0.24);
+    }
+
+    .challenge-box h3,
+    .animal-box h3 {
+      margin: 0 0 10px;
+      color: #fde68a;
+    }
+
+    .challenge-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .challenge-card {
+      background: rgba(15, 23, 42, 0.18);
+      border-radius: 12px;
+      padding: 10px;
+      text-align: center;
+    }
+
+    .challenge-title {
+      margin: 0;
+      font-size: 13px;
+      color: #fef9c3;
+    }
+
+    .challenge-value {
+      margin: 4px 0 0;
+      font-size: 19px;
+      font-weight: 800;
+    }
+
+    .animal-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .animal-result {
+      margin: 0;
+      text-align: center;
+      color: #fef08a;
+      min-height: 24px;
+    }
+
+    #parentModeBtn {
+      background: #fda4af;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.62);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      z-index: 10;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-card {
+      width: min(500px, 100%);
+      background: #fffbea;
+      color: #1f2937;
+      border-radius: 18px;
+      border: 4px dashed #f59e0b;
+      padding: 18px;
+      text-align: center;
+      box-shadow: 0 16px 26px rgba(0, 0, 0, 0.28);
+      animation: popIn 0.35s ease;
+    }
+
+    .modal-card h2 {
+      margin: 0 0 8px;
+      color: #b45309;
+    }
+
+    .modal-card p {
+      margin: 6px 0;
+    }
+
+    .modal-card button {
+      margin-top: 10px;
+      background: #f59e0b;
+    }
+
+    .game-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .mode-chip {
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 13px;
+      color: #fef9c3;
+    }
+
+    body.theme-light .sub,
+    body.theme-light .extra-title,
+    body.theme-light .plan-box h3,
+    body.theme-light .speech-lab h3,
+    body.theme-light .challenge-box h3,
+    body.theme-light .animal-box h3,
+    body.theme-light #miniGameTitle,
+    body.theme-light #miniScoreBadge,
+    body.theme-light #message,
+    body.theme-light .animal-result,
+    body.theme-light .mode-chip {
+      color: #1f2937;
+    }
+
+    body.theme-light .challenge-title,
+    body.theme-light .speech-range label,
+    body.theme-light #miniGameHint {
+      color: #334155;
+    }
+
+    body.theme-light .game,
+    body.theme-light .challenge-card,
+    body.theme-light .speech-range,
+    body.theme-light .mini-track {
+      background: rgba(15, 23, 42, 0.08);
+    }
+
+    body.theme-light .mode-chip {
+      background: rgba(15, 23, 42, 0.08);
+      border-color: rgba(15, 23, 42, 0.2);
+    }
+
+    .play-area {
+      height: 200px;
+      border-radius: 14px;
+      background: linear-gradient(160deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.08));
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mood-mini-box {
+      margin-top: 14px;
+      border-radius: 16px;
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.14);
+      border: 1px solid rgba(255, 255, 255, 0.24);
+    }
+
+    .mood-mini-box h3 {
+      margin: 0 0 8px;
+      color: #fde68a;
+    }
+
+    #miniGameTitle {
+      margin: 0 0 6px;
+      font-weight: 700;
+      color: #fef9c3;
+    }
+
+    #miniGameHint {
+      margin: 0 0 10px;
+      font-size: 14px;
+      color: #e2e8f0;
+    }
+
+    .mini-controls {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    #miniScoreBadge {
+      font-weight: 700;
+      color: #fde68a;
+    }
+
+    .mini-track {
+      height: 120px;
+      border-radius: 12px;
+      background: linear-gradient(160deg, rgba(15, 23, 42, 0.2), rgba(15, 23, 42, 0.1));
+      position: relative;
+      overflow: hidden;
+      border: 1px dashed rgba(255, 255, 255, 0.35);
+    }
+
+    #miniTarget {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #fff, #60a5fa);
+      border: 2px solid rgba(255, 255, 255, 0.85);
+      display: grid;
+      place-items: center;
+      font-size: 20px;
+      cursor: pointer;
+      user-select: none;
+      left: 10px;
+      top: 35px;
+    }
+
+    #star {
+      position: absolute;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #fff, #f59e0b);
+      border: 2px solid rgba(255, 255, 255, 0.8);
+      display: grid;
+      place-items: center;
+      color: #7c2d12;
+      font-weight: 900;
+      cursor: pointer;
+      user-select: none;
+      animation: starPulse 0.8s ease-in-out infinite alternate;
+    }
+
+    .sticker {
+      position: fixed;
+      top: -10px;
+      font-size: 20px;
+      pointer-events: none;
+      z-index: 1;
+      animation: fall linear forwards;
+    }
+
+    .active-msg {
+      animation: bounceMsg 0.5s ease;
+      color: #fef08a;
+    }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: translateY(14px) scale(0.97); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-22px); }
+    }
+
+    @keyframes bounceMsg {
+      0% { transform: scale(0.94); opacity: 0.3; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes starPulse {
+      from { transform: scale(1); }
+      to { transform: scale(1.09); }
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(110vh) rotate(320deg);
+        opacity: 0.9;
+      }
+    }
+
+    @media (max-width: 740px) {
+      .top-tools,
+      .speak-box,
+      .actions,
+      .extras,
+      .speech-grid,
+      .speech-actions,
+      .challenge-grid,
+      .animal-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .mini-controls {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    @media (min-width: 741px) and (max-width: 1024px) {
+      .actions {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .speech-actions {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .game-top {
+        justify-content: flex-start;
+      }
+    }
+  </style>
+</head>
+<body class="floating-shapes theme-dark">
+  <main class="card">
+    <h1>Kid-s-Funtime</h1>
+    <p class="sub">Select mood, play mini game, and enjoy surprise effects.</p>
+
+    <div class="top-tools">
+      <div class="speak-box">
+        <input type="text" id="text" placeholder="Write a fun line...">
+        <button id="speakBtn">Speak</button>
+      </div>
+      <select id="colorSelect" aria-label="Select color">
+        <option value="">Select color</option>
+        <option value="aliceblue">Alice Blue</option>
+        <option value="antiquewhite">Antique White</option>
+        <option value="aqua">Aqua</option>
+        <option value="aquamarine">Aquamarine</option>
+        <option value="azure">Azure</option>
+        <option value="beige">Beige</option>
+        <option value="bisque">Bisque</option>
+        <option value="black">Black</option>
+        <option value="blanchedalmond">Blanched Almond</option>
+        <option value="blue">Blue</option>
+        <option value="blueviolet">Blue Violet</option>
+        <option value="brown">Brown</option>
+        <option value="burlywood">Burly Wood</option>
+        <option value="cadetblue">Cadet Blue</option>
+        <option value="chartreuse">Chartreuse</option>
+        <option value="chocolate">Chocolate</option>
+        <option value="coral">Coral</option>
+        <option value="cornflowerblue">Cornflower Blue</option>
+        <option value="cornsilk">Cornsilk</option>
+        <option value="crimson">Crimson</option>
+        <option value="cyan">Cyan</option>
+        <option value="darkblue">Dark Blue</option>
+        <option value="darkcyan">Dark Cyan</option>
+        <option value="darkgoldenrod">Dark Golden Rod</option>
+        <option value="darkgray">Dark Gray</option>
+        <option value="darkgreen">Dark Green</option>
+        <option value="darkkhaki">Dark Khaki</option>
+        <option value="darkmagenta">Dark Magenta</option>
+        <option value="darkorange">Dark Orange</option>
+        <option value="darkred">Dark Red</option>
+        <option value="deepskyblue">Deep Sky Blue</option>
+        <option value="dodgerblue">Dodger Blue</option>
+        <option value="firebrick">Firebrick</option>
+        <option value="floralwhite">Floral White</option>
+        <option value="forestgreen">Forest Green</option>
+        <option value="fuchsia">Fuchsia</option>
+        <option value="gainsboro">Gainsboro</option>
+        <option value="ghostwhite">Ghost White</option>
+        <option value="gold">Gold</option>
+        <option value="goldenrod">Golden Rod</option>
+        <option value="gray">Gray</option>
+        <option value="green">Green</option>
+        <option value="greenyellow">Green Yellow</option>
+        <option value="honeydew">Honey Dew</option>
+        <option value="hotpink">Hot Pink</option>
+        <option value="indianred">Indian Red</option>
+        <option value="indigo">Indigo</option>
+        <option value="ivory">Ivory</option>
+        <option value="khaki">Khaki</option>
+        <option value="lavender">Lavender</option>
+        <option value="lawngreen">Lawn Green</option>
+        <option value="lemonchiffon">Lemon Chiffon</option>
+        <option value="lightblue">Light Blue</option>
+        <option value="lightcoral">Light Coral</option>
+        <option value="lightgreen">Light Green</option>
+        <option value="lightsalmon">Light Salmon</option>
+        <option value="lightseagreen">Light Sea Green</option>
+        <option value="lightskyblue">Light Sky Blue</option>
+        <option value="lime">Lime</option>
+        <option value="linen">Linen</option>
+        <option value="magenta">Magenta</option>
+        <option value="maroon">Maroon</option>
+        <option value="mediumblue">Medium Blue</option>
+        <option value="mediumorchid">Medium Orchid</option>
+        <option value="mediumpurple">Medium Purple</option>
+        <option value="midnightblue">Midnight Blue</option>
+        <option value="mintcream">Mint Cream</option>
+        <option value="mistyrose">Misty Rose</option>
+        <option value="moccasin">Moccasin</option>
+        <option value="navy">Navy</option>
+        <option value="olive">Olive</option>
+        <option value="orange">Orange</option>
+        <option value="orangered">Orange Red</option>
+        <option value="orchid">Orchid</option>
+        <option value="palegreen">Pale Green</option>
+        <option value="paleturquoise">Pale Turquoise</option>
+        <option value="peachpuff">Peach Puff</option>
+        <option value="peru">Peru</option>
+        <option value="pink">Pink</option>
+        <option value="plum">Plum</option>
+        <option value="powderblue">Powder Blue</option>
+        <option value="purple">Purple</option>
+        <option value="red">Red</option>
+        <option value="rosybrown">Rosy Brown</option>
+        <option value="royalblue">Royal Blue</option>
+        <option value="saddlebrown">Saddle Brown</option>
+        <option value="salmon">Salmon</option>
+        <option value="sandybrown">Sandy Brown</option>
+        <option value="seagreen">Sea Green</option>
+        <option value="seashell">Sea Shell</option>
+        <option value="sienna">Sienna</option>
+        <option value="silver">Silver</option>
+        <option value="skyblue">Sky Blue</option>
+        <option value="slateblue">Slate Blue</option>
+        <option value="snow">Snow</option>
+        <option value="springgreen">Spring Green</option>
+        <option value="steelblue">Steel Blue</option>
+        <option value="tan">Tan</option>
+        <option value="teal">Teal</option>
+        <option value="thistle">Thistle</option>
+        <option value="tomato">Tomato</option>
+        <option value="turquoise">Turquoise</option>
+        <option value="violet">Violet</option>
+        <option value="wheat">Wheat</option>
+        <option value="white">White</option>
+        <option value="whitesmoke">White Smoke</option>
+        <option value="yellow">Yellow</option>
+        <option value="yellowgreen">Yellow Green</option>
+      </select>
+    </div>
+
+    <div class="mood-grid">
+      <button class="mood" data-mood="happy">Happy</button>
+      <button class="mood" data-mood="sad">Sad</button>
+      <button class="mood" data-mood="angry">Angry</button>
+      <button class="mood" data-mood="nervous">Nervous</button>
+    </div>
+
+    <p id="message">Your mood will show here</p>
+
+    <div class="actions">
+      <button id="changeText">Change Text</button>
+      <button id="fontStyle">Font Style</button>
+      <button class="surprise" id="surprise">Surprise</button>
+      <button id="resetMood">Reset</button>
+      <button id="parentModeBtn">Parent Mode: Off</button>
+    </div>
+
+    <section class="game">
+      <div class="game-top">
+        <strong>Mini Game: Catch the Star</strong>
+        <span class="mode-chip" id="gameMode">Mode: Happy</span>
+        <span class="mode-chip" id="gameRule">Points: +1 | Speed: Normal</span>
+        <span>Score: <span id="score">0</span></span>
+      </div>
+      <div class="play-area" id="playArea">
+        <div id="star">+</div>
+      </div>
+    </section>
+
+    <section class="mood-mini-box">
+      <h3>Mood Mini Game</h3>
+      <p id="miniGameTitle">Happy Game: Pop Balloons</p>
+      <p id="miniGameHint">Press Play Mood Game and tap the bubble to score points.</p>
+      <div class="mini-controls">
+        <button id="miniActionBtn">Play Mood Game</button>
+        <span id="miniScoreBadge">Mini Score: 0</span>
+      </div>
+      <div class="mini-track" id="miniTrack">
+        <div id="miniTarget">o</div>
+      </div>
+    </section>
+
+    <section class="extras">
+      <article class="extra-card">
+        <p class="extra-title">Best Score</p>
+        <p class="extra-value" id="bestScore">0</p>
+      </article>
+      <article class="extra-card">
+        <p class="extra-title">Mood Clicks</p>
+        <p class="extra-value" id="moodClicks">0</p>
+      </article>
+      <article class="extra-card">
+        <p class="extra-title">Surprises</p>
+        <p class="extra-value" id="surpriseCount">0</p>
+      </article>
+    </section>
+
+    <section class="plan-box">
+      <h3>Big Plans For Kids</h3>
+      <ol class="plan-list">
+        <li>30-second challenge mode with timer and medals.</li>
+        <li>Animal soundboard with cute icons and voice effects.</li>
+        <li>Story mode: choose mood and unlock mini stories.</li>
+        <li>Level system with badges: Starter, Star, Super Kid.</li>
+      </ol>
+    </section>
+
+    <section class="challenge-box">
+      <h3>Daily Challenge</h3>
+      <div class="challenge-grid">
+        <article class="challenge-card">
+          <p class="challenge-title">Target</p>
+          <p class="challenge-value" id="challengeTarget">10</p>
+        </article>
+        <article class="challenge-card">
+          <p class="challenge-title">Progress</p>
+          <p class="challenge-value" id="challengeProgress">0/10</p>
+        </article>
+        <article class="challenge-card">
+          <p class="challenge-title">Status</p>
+          <p class="challenge-value" id="challengeStatus">Active</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="speech-lab">
+      <h3>Speech Fun Lab</h3>
+      <div class="speech-grid">
+        <select id="voiceSelect" aria-label="Select voice">
+          <option value="">Loading voices...</option>
+        </select>
+        <button id="speakPlans">Speak Plans</button>
+      </div>
+      <div class="speech-grid">
+        <div class="speech-range">
+          <label for="rateRange">Rate <span id="rateValue">1</span></label>
+          <input id="rateRange" type="range" min="0.6" max="1.6" step="0.1" value="1">
+        </div>
+        <div class="speech-range">
+          <label for="pitchRange">Pitch <span id="pitchValue">1</span></label>
+          <input id="pitchRange" type="range" min="0.5" max="1.8" step="0.1" value="1">
+        </div>
+      </div>
+      <div class="speech-grid">
+        <div class="speech-range">
+          <label for="volumeRange">Volume <span id="volumeValue">1</span></label>
+          <input id="volumeRange" type="range" min="0.2" max="1" step="0.1" value="1">
+        </div>
+        <button id="speakMood">Speak Current Message</button>
+      </div>
+      <div class="speech-actions">
+        <button id="pauseSpeech">Pause</button>
+        <button id="resumeSpeech">Resume</button>
+        <button id="stopSpeech">Stop</button>
+        <button id="magicSpeak">Magic Talk</button>
+        <button id="autoVoiceBtn">Auto Voice: On</button>
+      </div>
+    </section>
+
+    <section class="animal-box">
+      <h3>Animal Voice Buttons</h3>
+      <div class="animal-grid">
+        <button class="animal-btn" data-animal="cat">Cat</button>
+        <button class="animal-btn" data-animal="dog">Dog</button>
+        <button class="animal-btn" data-animal="lion">Lion</button>
+      </div>
+      <p class="animal-result" id="animalResult">Tap an animal button for fun sounds.</p>
+    </section>
+  </main>
+
+  <div class="modal" id="rewardModal" aria-hidden="true">
+    <div class="modal-card">
+      <h2>Super Kid Reward Box</h2>
+      <p id="rewardTitle">Amazing Work!</p>
+      <p id="rewardDesc">You unlocked a special certificate.</p>
+      <button id="closeReward">Close</button>
+    </div>
+  </div>
+
+  <script>
+    const body = document.body;
+    const message = document.getElementById("message");
+    const textInput = document.getElementById("text");
+    const colorSelect = document.getElementById("colorSelect");
+    const star = document.getElementById("star");
+    const playArea = document.getElementById("playArea");
+    const scoreText = document.getElementById("score");
+    const bestScoreText = document.getElementById("bestScore");
+    const moodClicksText = document.getElementById("moodClicks");
+    const surpriseCountText = document.getElementById("surpriseCount");
+    const voiceSelect = document.getElementById("voiceSelect");
+    const rateRange = document.getElementById("rateRange");
+    const pitchRange = document.getElementById("pitchRange");
+    const volumeRange = document.getElementById("volumeRange");
+    const rateValue = document.getElementById("rateValue");
+    const pitchValue = document.getElementById("pitchValue");
+    const volumeValue = document.getElementById("volumeValue");
+    const synth = window.speechSynthesis;
+    const parentModeBtn = document.getElementById("parentModeBtn");
+    const challengeTargetText = document.getElementById("challengeTarget");
+    const challengeProgressText = document.getElementById("challengeProgress");
+    const challengeStatusText = document.getElementById("challengeStatus");
+    const animalResult = document.getElementById("animalResult");
+    const rewardModal = document.getElementById("rewardModal");
+    const rewardTitle = document.getElementById("rewardTitle");
+    const rewardDesc = document.getElementById("rewardDesc");
+    const autoVoiceBtn = document.getElementById("autoVoiceBtn");
+    const gameModeText = document.getElementById("gameMode");
+    const gameRuleText = document.getElementById("gameRule");
+    const miniGameTitle = document.getElementById("miniGameTitle");
+    const miniGameHint = document.getElementById("miniGameHint");
+    const miniActionBtn = document.getElementById("miniActionBtn");
+    const miniScoreBadge = document.getElementById("miniScoreBadge");
+    const miniTrack = document.getElementById("miniTrack");
+    const miniTarget = document.getElementById("miniTarget");
+
+    const moodMap = {
+      happy: { msg: "Awesome! Keep smiling!", bg: "linear-gradient(135deg, #f59e0b, #fde047)", lightTheme: true },
+      sad: { msg: "It's okay. Better times are coming!", bg: "linear-gradient(135deg, #38bdf8, #6366f1)", lightTheme: false },
+      angry: { msg: "Take a deep breath and relax.", bg: "linear-gradient(135deg, #ef4444, #b91c1c)", lightTheme: false },
+      nervous: { msg: "You got this. Stay calm.", bg: "linear-gradient(135deg, #22c55e, #0f766e)", lightTheme: false }
+    };
+
+    const moodStories = {
+      happy: "A bright rainbow appeared and everyone danced with joy.",
+      sad: "A tiny cloud moved away and the sun smiled just for you.",
+      angry: "A brave hero counted to five and turned fire into light.",
+      nervous: "A little turtle took slow breaths and won the big race."
+    };
+
+    const animalMap = {
+      cat: { line: "Meow meow. I am your tiny cat friend.", freq: [740, 880] },
+      dog: { line: "Woof woof. Lets run and play all day.", freq: [420, 540] },
+      lion: { line: "Roar. You are bold like a lion today.", freq: [220, 180] }
+    };
+
+    const moodGameMap = {
+      happy: { label: "Happy", speedMs: 1400, points: 2, target: 14, speedLabel: "Fast" },
+      sad: { label: "Sad", speedMs: 1900, points: 1, target: 8, speedLabel: "Slow" },
+      angry: { label: "Angry", speedMs: 900, points: 3, target: 18, speedLabel: "Super Fast" },
+      nervous: { label: "Nervous", speedMs: 1200, points: 2, target: 12, speedLabel: "Medium Fast" }
+    };
+
+    const moodMiniMap = {
+      happy: {
+        title: "Happy Game: Pop Balloons",
+        hint: "Tap the bubble as many times as you can. Each tap gives +1 mini score.",
+        icon: "o"
+      },
+      sad: {
+        title: "Sad Game: Collect Smiles",
+        hint: "Tap hearts and turn the day bright. Reach 5 taps for sunshine message.",
+        icon: "<3"
+      },
+      angry: {
+        title: "Angry Game: Calm Tap",
+        hint: "Tap Play every 1 second slowly. Fast taps reset calm count.",
+        icon: "*"
+      },
+      nervous: {
+        title: "Nervous Game: Focus Dot",
+        hint: "Catch the moving dot. Each hit gives +2 mini score.",
+        icon: "+"
+      }
+    };
+
+    const surpriseLines = [
+      "You unlocked rainbow fun mode!",
+      "Star shower started!",
+      "Today is your lucky day!",
+      "Keep playing and keep laughing!"
+    ];
+
+    let score = 0;
+    let bestScore = 0;
+    let moodClicks = 0;
+    let surpriseCount = 0;
+    let moveTimer = null;
+    let voices = [];
+    let challengeTarget = 10;
+    let challengeCompleted = false;
+    let rewardClaimed = false;
+    let parentMode = false;
+    let parentPin = "";
+    let autoVoice = true;
+    let activeMood = "happy";
+    let starPoints = 1;
+    let miniScore = 0;
+    let miniMoveTimer = null;
+    let miniRoundActive = false;
+    let calmTapCount = 0;
+    let calmLastTap = 0;
+
+    const STORAGE_KEY = "kids_mood_fun_progress_v1";
+
+    function animateMessage(text) {
+      message.classList.remove("active-msg");
+      message.textContent = text;
+      void message.offsetWidth;
+      message.classList.add("active-msg");
+    }
+
+    function updateRangeValue() {
+      rateValue.textContent = rateRange.value;
+      pitchValue.textContent = pitchRange.value;
+      volumeValue.textContent = volumeRange.value;
+    }
+
+    function applyTheme(isLight) {
+      body.classList.toggle("theme-light", isLight);
+      body.classList.toggle("theme-dark", !isLight);
+    }
+
+    function setPageBackground(backgroundValue, isLight) {
+      body.style.background = backgroundValue;
+      applyTheme(Boolean(isLight));
+    }
+
+    function isLightColor(colorValue) {
+      const probe = document.createElement("span");
+      probe.style.color = colorValue;
+      probe.style.display = "none";
+      document.body.appendChild(probe);
+      const resolved = getComputedStyle(probe).color;
+      probe.remove();
+      const m = resolved.match(/\d+/g);
+      if (!m || m.length < 3) return false;
+      const r = Number(m[0]);
+      const g = Number(m[1]);
+      const b = Number(m[2]);
+      const luminance = 0.299 * r + 0.587 * g + 0.114 * b;
+      return luminance > 170;
+    }
+
+    function loadVoices() {
+      if (!synth) {
+        voiceSelect.innerHTML = "<option value=''>Speech not supported</option>";
+        return;
+      }
+      voices = synth.getVoices();
+      voiceSelect.innerHTML = "";
+      if (!voices.length) {
+        const opt = document.createElement("option");
+        opt.value = "";
+        opt.textContent = "No voices available";
+        voiceSelect.appendChild(opt);
+        return;
+      }
+      voices.forEach((voice, index) => {
+        const opt = document.createElement("option");
+        opt.value = String(index);
+        opt.textContent = voice.name + " (" + voice.lang + ")";
+        voiceSelect.appendChild(opt);
+      });
+    }
+
+    function speakText(text) {
+      if (!synth) return;
+      const content = (text || "").trim();
+      if (!content) return;
+      const utter = new SpeechSynthesisUtterance(content);
+      const selectedIndex = Number(voiceSelect.value);
+      if (!Number.isNaN(selectedIndex) && voices[selectedIndex]) {
+        utter.voice = voices[selectedIndex];
+      }
+      utter.rate = Number(rateRange.value);
+      utter.pitch = Number(pitchRange.value);
+      utter.volume = Number(volumeRange.value);
+      synth.cancel();
+      synth.speak(utter);
+    }
+
+    function playAnimalTone(sequence) {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+      const now = ctx.currentTime;
+      sequence.forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "triangle";
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.0001, now + idx * 0.18);
+        gain.gain.exponentialRampToValueAtTime(0.2, now + idx * 0.18 + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.18 + 0.15);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now + idx * 0.18);
+        osc.stop(now + idx * 0.18 + 0.16);
+      });
+      setTimeout(() => ctx.close(), 1100);
+    }
+
+    function saveProgress() {
+      const data = {
+        bestScore,
+        moodClicks,
+        surpriseCount,
+        challengeTarget,
+        challengeCompleted,
+        rewardClaimed,
+        autoVoice,
+        activeMood
+      };
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      } catch (e) {
+        // Ignore storage write failures (private mode or blocked storage)
+      }
+    }
+
+    function loadProgress() {
+      let raw = null;
+      try {
+        raw = localStorage.getItem(STORAGE_KEY);
+      } catch (e) {
+        // Ignore storage read failures
+      }
+      if (!raw) return;
+      try {
+        const data = JSON.parse(raw);
+        bestScore = Number(data.bestScore) || 0;
+        moodClicks = Number(data.moodClicks) || 0;
+        surpriseCount = Number(data.surpriseCount) || 0;
+        challengeTarget = Number(data.challengeTarget) || 10;
+        challengeCompleted = Boolean(data.challengeCompleted);
+        rewardClaimed = Boolean(data.rewardClaimed);
+        autoVoice = data.autoVoice !== false;
+        activeMood = moodGameMap[data.activeMood] ? data.activeMood : "happy";
+      } catch (e) {
+        // Ignore corrupted stored payload and continue with defaults
+      }
+    }
+
+    function refreshStatsUI() {
+      bestScoreText.textContent = String(bestScore);
+      moodClicksText.textContent = String(moodClicks);
+      surpriseCountText.textContent = String(surpriseCount);
+      challengeTargetText.textContent = String(challengeTarget);
+      challengeProgressText.textContent = score + "/" + challengeTarget;
+      challengeStatusText.textContent = challengeCompleted ? "Done" : "Active";
+    }
+
+    function startMoveTimer(speedMs) {
+      if (moveTimer) clearInterval(moveTimer);
+      moveTimer = setInterval(moveStar, speedMs);
+    }
+
+    function moveMiniTarget() {
+      const bounds = miniTrack.getBoundingClientRect();
+      const maxX = Math.max(0, bounds.width - 44);
+      const maxY = Math.max(0, bounds.height - 44);
+      miniTarget.style.left = Math.random() * maxX + "px";
+      miniTarget.style.top = Math.random() * maxY + "px";
+    }
+
+    function startMiniTimer(speedMs) {
+      if (miniMoveTimer) clearInterval(miniMoveTimer);
+      miniMoveTimer = setInterval(moveMiniTarget, speedMs);
+    }
+
+    function updateMiniScore(value) {
+      miniScore = Math.max(0, value);
+      miniScoreBadge.textContent = "Mini Score: " + miniScore;
+    }
+
+    function setupMiniGame(moodKey) {
+      const config = moodMiniMap[moodKey];
+      if (!config) return;
+      miniGameTitle.textContent = config.title;
+      miniGameHint.textContent = config.hint;
+      miniTarget.textContent = config.icon;
+      miniRoundActive = false;
+      calmTapCount = 0;
+      calmLastTap = 0;
+      if (miniMoveTimer) clearInterval(miniMoveTimer);
+      miniTarget.style.left = "10px";
+      miniTarget.style.top = "35px";
+
+      if (moodKey === "angry") {
+        miniTarget.style.left = "calc(50% - 20px)";
+        miniTarget.style.top = "calc(50% - 20px)";
+      } else if (moodKey === "nervous") {
+        startMiniTimer(1000);
+      } else if (moodKey === "happy") {
+        startMiniTimer(1300);
+      }
+    }
+
+    function applyMoodGameMode(moodKey) {
+      const mode = moodGameMap[moodKey];
+      if (!mode) return;
+      activeMood = moodKey;
+      starPoints = mode.points;
+      challengeTarget = mode.target;
+      challengeCompleted = score >= challengeTarget;
+      challengeTargetText.textContent = String(challengeTarget);
+      challengeStatusText.textContent = challengeCompleted ? "Done" : "Active";
+      gameModeText.textContent = "Mode: " + mode.label;
+      gameRuleText.textContent = "Points: +" + mode.points + " | Speed: " + mode.speedLabel;
+      startMoveTimer(mode.speedMs);
+      setupMiniGame(moodKey);
+      updateChallenge();
+      saveProgress();
+    }
+
+    function setParentModeLabel() {
+      parentModeBtn.textContent = "Parent Mode: " + (parentMode ? "On" : "Off");
+    }
+
+    function requireParentAccess() {
+      if (!parentMode) return true;
+      const entered = prompt("Parent Mode PIN required:");
+      if (!entered || entered !== parentPin) {
+        alert("Wrong PIN. Parent mode protected this action.");
+        return false;
+      }
+      return true;
+    }
+
+    function showReward(title, desc) {
+      rewardTitle.textContent = title;
+      rewardDesc.textContent = desc;
+      rewardModal.classList.add("show");
+      rewardModal.setAttribute("aria-hidden", "false");
+      runStickers(30);
+    }
+
+    function updateChallenge() {
+      challengeProgressText.textContent = score + "/" + challengeTarget;
+      if (!challengeCompleted && score >= challengeTarget) {
+        challengeCompleted = true;
+        challengeStatusText.textContent = "Done";
+        showReward("Daily Challenge Complete", "Great job. You finished today's star challenge.");
+        speakText("Congratulations. You completed the daily challenge.");
+        saveProgress();
+      }
+    }
+
+    function runStickers(count) {
+      for (let i = 0; i < count; i += 1) {
+        const s = document.createElement("div");
+        s.className = "sticker";
+        s.textContent = ["*", "+", "o", "#"][Math.floor(Math.random() * 4)];
+        s.style.left = Math.random() * 100 + "vw";
+        s.style.animationDuration = (Math.random() * 2 + 2) + "s";
+        s.style.opacity = String(Math.random() * 0.8 + 0.2);
+        document.body.appendChild(s);
+        setTimeout(() => s.remove(), 4000);
+      }
+    }
+
+    function moveStar() {
+      const bounds = playArea.getBoundingClientRect();
+      const maxX = Math.max(0, bounds.width - 50);
+      const maxY = Math.max(0, bounds.height - 50);
+      const x = Math.random() * maxX;
+      const y = Math.random() * maxY;
+      star.style.left = x + "px";
+      star.style.top = y + "px";
+    }
+
+    function resetPage() {
+      animateMessage("Your mood will show here");
+      setPageBackground("linear-gradient(135deg, #0ea5e9, #6366f1)", false);
+      body.style.fontStyle = "normal";
+      colorSelect.value = "";
+      textInput.value = "";
+      score = 0;
+      scoreText.textContent = "0";
+      moveStar();
+      applyMoodGameMode(activeMood);
+      updateChallenge();
+    }
+
+    document.querySelectorAll(".mood").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const selected = moodMap[btn.dataset.mood];
+        if (!selected) return;
+        moodClicks += 1;
+        moodClicksText.textContent = String(moodClicks);
+        animateMessage(selected.msg);
+        setPageBackground(selected.bg, selected.lightTheme);
+        applyMoodGameMode(btn.dataset.mood);
+        if (autoVoice) {
+          speakText(selected.msg + " " + (moodStories[btn.dataset.mood] || ""));
+        }
+        saveProgress();
+      });
+    });
+
+    document.getElementById("speakBtn").addEventListener("click", () => {
+      const value = textInput.value.trim() || message.textContent;
+      speakText(value);
+    });
+
+    colorSelect.addEventListener("change", () => {
+      if (!requireParentAccess()) {
+        colorSelect.value = "";
+        return;
+      }
+      if (!colorSelect.value) return;
+      const selectedColor = colorSelect.value;
+      setPageBackground(selectedColor, isLightColor(selectedColor));
+    });
+
+    document.getElementById("changeText").addEventListener("click", () => {
+      if (!requireParentAccess()) return;
+      const userText = prompt("Enter your fun message:");
+      if (!userText) return alert("Please enter text.");
+      animateMessage(userText);
+    });
+
+    document.getElementById("fontStyle").addEventListener("click", () => {
+      if (!requireParentAccess()) return;
+      const style = prompt("Enter font style: normal, italic, oblique");
+      if (!style) return alert("Please enter a font style.");
+      body.style.fontStyle = style.toLowerCase();
+    });
+
+    document.getElementById("surprise").addEventListener("click", () => {
+      const line = surpriseLines[Math.floor(Math.random() * surpriseLines.length)];
+      surpriseCount += 1;
+      surpriseCountText.textContent = String(surpriseCount);
+      animateMessage(line);
+      runStickers(26);
+      setPageBackground("linear-gradient(135deg, #f472b6, #22d3ee, #facc15)", true);
+      if (autoVoice) speakText(line);
+      saveProgress();
+    });
+
+    document.getElementById("resetMood").addEventListener("click", resetPage);
+
+    miniActionBtn.addEventListener("click", () => {
+      if (activeMood === "angry") {
+        const now = Date.now();
+        if (calmLastTap && now - calmLastTap < 900) {
+          calmTapCount = 0;
+          updateMiniScore(0);
+          animateMessage("Too fast. Slow breathe and tap again.");
+          return;
+        }
+        calmLastTap = now;
+        calmTapCount += 1;
+        updateMiniScore(calmTapCount);
+        animateMessage("Great calm tap: " + calmTapCount);
+        if (calmTapCount >= 5) {
+          animateMessage("Awesome calm power unlocked.");
+          if (autoVoice) speakText("Excellent calm control.");
+        }
+        return;
+      }
+
+      miniRoundActive = true;
+      updateMiniScore(0);
+      moveMiniTarget();
+      animateMessage("Mini game started for " + activeMood + " mood.");
+    });
+
+    miniTarget.addEventListener("click", () => {
+      if (!miniRoundActive && activeMood !== "angry") return;
+      if (activeMood === "happy") {
+        updateMiniScore(miniScore + 1);
+        moveMiniTarget();
+      } else if (activeMood === "sad") {
+        updateMiniScore(miniScore + 1);
+        if (miniScore >= 5) animateMessage("Sunshine is back. You did great.");
+      } else if (activeMood === "nervous") {
+        updateMiniScore(miniScore + 2);
+        moveMiniTarget();
+      } else if (activeMood === "angry") {
+        animateMessage("Use Play Mood Game button for calm taps.");
+      }
+    });
+
+    star.addEventListener("click", () => {
+      score += starPoints;
+      scoreText.textContent = String(score);
+      if (score > bestScore) {
+        bestScore = score;
+        bestScoreText.textContent = String(bestScore);
+        saveProgress();
+      }
+      animateMessage("Great! Score: " + score);
+      moveStar();
+      if (score % 5 === 0) runStickers(12);
+      if (autoVoice && score % 7 === 0) speakText("Awesome score " + score + ". Keep going superstar.");
+      if (!rewardClaimed && score >= 20) {
+        rewardClaimed = true;
+        showReward("Super Kid Certificate", "You crossed score 20. You are today's star player.");
+        speakText("Super kid certificate unlocked.");
+        saveProgress();
+      }
+      updateChallenge();
+    });
+
+    rateRange.addEventListener("input", updateRangeValue);
+    pitchRange.addEventListener("input", updateRangeValue);
+    volumeRange.addEventListener("input", updateRangeValue);
+
+    document.getElementById("speakMood").addEventListener("click", () => {
+      speakText(message.textContent);
+    });
+
+    document.getElementById("speakPlans").addEventListener("click", () => {
+      const plansText = "Big plans for kids: 30 second challenge mode, animal soundboard, story mode, and level badges.";
+      speakText(plansText);
+    });
+
+    document.getElementById("pauseSpeech").addEventListener("click", () => {
+      if (!synth) return;
+      if (synth.speaking && !synth.paused) synth.pause();
+    });
+
+    document.getElementById("resumeSpeech").addEventListener("click", () => {
+      if (!synth) return;
+      if (synth.paused) synth.resume();
+    });
+
+    document.getElementById("stopSpeech").addEventListener("click", () => {
+      if (!synth) return;
+      synth.cancel();
+    });
+
+    document.getElementById("magicSpeak").addEventListener("click", () => {
+      const lines = [
+        "Hello champion, let us play and learn.",
+        "You are doing amazing today.",
+        "Smile big and catch more stars.",
+        "Fun mode activated. Ready set go."
+      ];
+      const randomLine = lines[Math.floor(Math.random() * lines.length)];
+      animateMessage(randomLine);
+      speakText(randomLine);
+      runStickers(10);
+    });
+
+    autoVoiceBtn.addEventListener("click", () => {
+      autoVoice = !autoVoice;
+      autoVoiceBtn.textContent = "Auto Voice: " + (autoVoice ? "On" : "Off");
+      if (!autoVoice && synth) synth.cancel();
+      saveProgress();
+    });
+
+    document.querySelectorAll(".animal-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const animal = animalMap[btn.dataset.animal];
+        if (!animal) return;
+        animalResult.textContent = animal.line;
+        animateMessage(animal.line);
+        speakText(animal.line);
+        playAnimalTone(animal.freq);
+        runStickers(6);
+      });
+    });
+
+    parentModeBtn.addEventListener("click", () => {
+      if (!parentMode) {
+        const newPin = prompt("Set Parent PIN (4+ chars):");
+        if (!newPin || newPin.length < 4) return alert("PIN must be at least 4 characters.");
+        parentPin = newPin;
+        parentMode = true;
+        setParentModeLabel();
+        alert("Parent mode enabled.");
+        return;
+      }
+      const entered = prompt("Enter PIN to disable Parent Mode:");
+      if (!entered || entered !== parentPin) return alert("Wrong PIN.");
+      parentMode = false;
+      parentPin = "";
+      setParentModeLabel();
+      alert("Parent mode disabled.");
+    });
+
+    document.getElementById("closeReward").addEventListener("click", () => {
+      rewardModal.classList.remove("show");
+      rewardModal.setAttribute("aria-hidden", "true");
+    });
+
+    window.addEventListener("resize", moveStar);
+    window.addEventListener("DOMContentLoaded", () => {
+      loadProgress();
+      refreshStatsUI();
+      moveStar();
+      applyMoodGameMode(activeMood);
+      updateRangeValue();
+      loadVoices();
+      setParentModeLabel();
+      updateChallenge();
+      autoVoiceBtn.textContent = "Auto Voice: " + (autoVoice ? "On" : "Off");
+    });
+
+    if (window.speechSynthesis) {
+      window.speechSynthesis.onvoiceschanged = loadVoices;
+    }
+
+    window.addEventListener("beforeunload", () => {
+      if (moveTimer) clearInterval(moveTimer);
+      if (miniMoveTimer) clearInterval(miniMoveTimer);
+      if (synth) synth.cancel();
+      saveProgress();
+    });
+  </script>
+</body>
+</html>
