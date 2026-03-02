@@ -591,16 +591,20 @@
       .speak-box,
       .extras,
       .speech-grid,
-      .challenge-grid,
-      .animal-grid {
+      .challenge-grid {
         grid-template-columns: 1fr;
       }
 
+      .mood-grid,
       .actions {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
       .speech-actions {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .animal-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
@@ -620,7 +624,7 @@
 
     @media (min-width: 741px) and (max-width: 1024px) {
       .actions {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
       .extras,
@@ -643,13 +647,8 @@
     }
 
     @media (max-width: 420px) {
-      .mood-grid,
-      .actions {
-        grid-template-columns: 1fr;
-      }
-
       .speech-actions {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
       .game {
