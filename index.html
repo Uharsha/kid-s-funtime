@@ -80,6 +80,10 @@
       overflow: hidden;
     }
 
+    .card > section {
+      margin-top: 12px;
+    }
+
     body.theme-light .card {
       background: rgba(255, 255, 255, 0.78);
       border-color: rgba(15, 23, 42, 0.2);
@@ -100,7 +104,7 @@
     .top-tools {
       display: grid;
       grid-template-columns: 1fr auto;
-      gap: 10px;
+      gap: clamp(8px, 1.2vw, 12px);
       margin-bottom: 16px;
     }
 
@@ -153,7 +157,7 @@
     .mood-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(130px, 1fr));
-      gap: 10px;
+      gap: clamp(8px, 1.2vw, 12px);
     }
 
     #message {
@@ -166,7 +170,7 @@
     .actions {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
-      gap: 10px;
+      gap: clamp(8px, 1.2vw, 12px);
       margin-bottom: 12px;
     }
 
@@ -244,7 +248,7 @@
     .speech-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
+      gap: clamp(8px, 1.2vw, 12px);
       margin-bottom: 10px;
       align-items: stretch;
     }
@@ -267,7 +271,7 @@
     .speech-actions {
       display: grid;
       grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 10px;
+      gap: clamp(8px, 1.2vw, 12px);
     }
 
     .speech-lab select,
@@ -294,7 +298,7 @@
     .challenge-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
+      gap: clamp(8px, 1.2vw, 12px);
     }
 
     .challenge-card {
@@ -319,7 +323,7 @@
     .animal-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
+      gap: clamp(8px, 1.2vw, 12px);
       margin-bottom: 8px;
     }
 
@@ -566,9 +570,25 @@
     }
 
     @media (max-width: 740px) {
+      body {
+        padding: 10px;
+      }
+
+      .card {
+        border-radius: 18px;
+        padding: 12px;
+      }
+
+      h1 {
+        font-size: clamp(1.35rem, 6.2vw, 1.75rem);
+      }
+
+      .sub {
+        margin-bottom: 12px;
+      }
+
       .top-tools,
       .speak-box,
-      .actions,
       .extras,
       .speech-grid,
       .challenge-grid,
@@ -576,8 +596,20 @@
         grid-template-columns: 1fr;
       }
 
+      .actions {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
       .speech-actions {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .game-top {
+        justify-content: flex-start;
+      }
+
+      .mode-chip {
+        font-size: 12px;
       }
 
       .mini-controls {
@@ -589,6 +621,12 @@
     @media (min-width: 741px) and (max-width: 1024px) {
       .actions {
         grid-template-columns: repeat(3, 1fr);
+      }
+
+      .extras,
+      .challenge-grid,
+      .animal-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
       .speech-grid {
@@ -605,8 +643,21 @@
     }
 
     @media (max-width: 420px) {
+      .mood-grid,
+      .actions {
+        grid-template-columns: 1fr;
+      }
+
       .speech-actions {
         grid-template-columns: 1fr;
+      }
+
+      .game {
+        padding: 10px;
+      }
+
+      .play-area {
+        height: 180px;
       }
     }
 
