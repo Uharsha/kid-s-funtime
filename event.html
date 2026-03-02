@@ -117,8 +117,18 @@
       border-radius: 13px;
       padding: 11px 14px;
       font-size: 16px;
-      outline: none;
+      outline: 2px solid transparent;
+      outline-offset: 2px;
       min-height: 44px;
+    }
+
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible,
+    #star:focus-visible,
+    #miniTarget:focus-visible {
+      outline: 3px solid #f59e0b;
+      box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.35);
     }
 
     input,
@@ -330,6 +340,18 @@
 
     .modal.show {
       display: flex;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
     }
 
     .modal-card {
@@ -567,9 +589,20 @@
         justify-content: flex-start;
       }
     }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+      }
+    }
   </style>
 </head>
 <body class="floating-shapes theme-dark">
+  <div id="a11yStatus" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
   <main class="card">
     <h1>Kid's Funtime</h1>
     <p class="sub">Select mood, play mini game, and enjoy surprise effects.</p>
@@ -699,7 +732,7 @@
       <button class="mood" data-mood="nervous">Nervous</button>
     </div>
 
-    <p id="message">Your mood will show here</p>
+    <p id="message" role="status" aria-live="polite" aria-atomic="true">Your mood will show here</p>
 
     <div class="actions">
       <button id="changeText">Change Text</button>
@@ -714,10 +747,10 @@
         <strong>Mini Game: Catch the Star</strong>
         <span class="mode-chip" id="gameMode">Mode: Happy</span>
         <span class="mode-chip" id="gameRule">Points: +1 | Speed: Normal</span>
-        <span>Score: <span id="score">0</span></span>
+        <span>Score: <span id="score" aria-live="polite" aria-atomic="true">0</span></span>
       </div>
       <div class="play-area" id="playArea">
-        <div id="star">+</div>
+        <div id="star" role="button" tabindex="0" aria-label="Catch the moving star">+</div>
       </div>
     </section>
 
@@ -727,25 +760,25 @@
       <p id="miniGameHint">Press Play Mood Game and tap the bubble to score points.</p>
       <div class="mini-controls">
         <button id="miniActionBtn">Play Mood Game</button>
-        <span id="miniScoreBadge">Mini Score: 0</span>
+        <span id="miniScoreBadge" aria-live="polite" aria-atomic="true">Mini Score: 0</span>
       </div>
       <div class="mini-track" id="miniTrack">
-        <div id="miniTarget">o</div>
+        <div id="miniTarget" role="button" tabindex="0" aria-label="Mini game target">o</div>
       </div>
     </section>
 
     <section class="extras">
       <article class="extra-card">
         <p class="extra-title">Best Score</p>
-        <p class="extra-value" id="bestScore">0</p>
+        <p class="extra-value" id="bestScore" aria-live="polite" aria-atomic="true">0</p>
       </article>
       <article class="extra-card">
         <p class="extra-title">Mood Clicks</p>
-        <p class="extra-value" id="moodClicks">0</p>
+        <p class="extra-value" id="moodClicks" aria-live="polite" aria-atomic="true">0</p>
       </article>
       <article class="extra-card">
         <p class="extra-title">Surprises</p>
-        <p class="extra-value" id="surpriseCount">0</p>
+        <p class="extra-value" id="surpriseCount" aria-live="polite" aria-atomic="true">0</p>
       </article>
     </section>
 
@@ -764,15 +797,15 @@
       <div class="challenge-grid">
         <article class="challenge-card">
           <p class="challenge-title">Target</p>
-          <p class="challenge-value" id="challengeTarget">10</p>
+          <p class="challenge-value" id="challengeTarget" aria-live="polite" aria-atomic="true">10</p>
         </article>
         <article class="challenge-card">
           <p class="challenge-title">Progress</p>
-          <p class="challenge-value" id="challengeProgress">0/10</p>
+          <p class="challenge-value" id="challengeProgress" aria-live="polite" aria-atomic="true">0/10</p>
         </article>
         <article class="challenge-card">
           <p class="challenge-title">Status</p>
-          <p class="challenge-value" id="challengeStatus">Active</p>
+          <p class="challenge-value" id="challengeStatus" aria-live="polite" aria-atomic="true">Active</p>
         </article>
       </div>
     </section>
@@ -818,13 +851,13 @@
         <button class="animal-btn" data-animal="dog">Dog</button>
         <button class="animal-btn" data-animal="lion">Lion</button>
       </div>
-      <p class="animal-result" id="animalResult">Tap an animal button for fun sounds.</p>
+      <p class="animal-result" id="animalResult" role="status" aria-live="polite" aria-atomic="true">Tap an animal button for fun sounds.</p>
     </section>
   </main>
 
   <div class="modal" id="rewardModal" aria-hidden="true">
-    <div class="modal-card">
-      <h2>Super Kid Reward Box</h2>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="rewardHeading" tabindex="-1">
+      <h2 id="rewardHeading">Super Kid Reward Box</h2>
       <p id="rewardTitle">Amazing Work!</p>
       <p id="rewardDesc">You unlocked a special certificate.</p>
       <button id="closeReward">Close</button>
@@ -858,6 +891,8 @@
     const rewardModal = document.getElementById("rewardModal");
     const rewardTitle = document.getElementById("rewardTitle");
     const rewardDesc = document.getElementById("rewardDesc");
+    const closeRewardBtn = document.getElementById("closeReward");
+    const a11yStatus = document.getElementById("a11yStatus");
     const autoVoiceBtn = document.getElementById("autoVoiceBtn");
     const gameModeText = document.getElementById("gameMode");
     const gameRuleText = document.getElementById("gameRule");
@@ -867,6 +902,7 @@
     const miniScoreBadge = document.getElementById("miniScoreBadge");
     const miniTrack = document.getElementById("miniTrack");
     const miniTarget = document.getElementById("miniTarget");
+    const starFocusables = [star, miniTarget];
 
     const moodMap = {
       happy: { msg: "Awesome! Keep smiling!", bg: "linear-gradient(135deg, #f59e0b, #fde047)", lightTheme: true },
@@ -944,6 +980,7 @@
     let miniRoundActive = false;
     let calmTapCount = 0;
     let calmLastTap = 0;
+    let lastFocusedElement = null;
 
     const STORAGE_KEY = "kids_mood_fun_progress_v1";
 
@@ -952,6 +989,13 @@
       message.textContent = text;
       void message.offsetWidth;
       message.classList.add("active-msg");
+    }
+
+    function announce(text) {
+      a11yStatus.textContent = "";
+      setTimeout(() => {
+        a11yStatus.textContent = text;
+      }, 10);
     }
 
     function updateRangeValue() {
@@ -968,6 +1012,7 @@
     function setPageBackground(backgroundValue, isLight) {
       body.style.background = backgroundValue;
       applyTheme(Boolean(isLight));
+      announce("Background theme updated.");
     }
 
     function isLightColor(colorValue) {
@@ -1166,18 +1211,28 @@
       if (!parentMode) return true;
       const entered = prompt("Parent Mode PIN required:");
       if (!entered || entered !== parentPin) {
-        alert("Wrong PIN. Parent mode protected this action.");
+        announce("Wrong PIN. Parent mode protected this action.");
         return false;
       }
       return true;
     }
 
+    function closeRewardModal() {
+      rewardModal.classList.remove("show");
+      rewardModal.setAttribute("aria-hidden", "true");
+      if (lastFocusedElement) lastFocusedElement.focus();
+      announce("Reward dialog closed.");
+    }
+
     function showReward(title, desc) {
       rewardTitle.textContent = title;
       rewardDesc.textContent = desc;
+      lastFocusedElement = document.activeElement;
       rewardModal.classList.add("show");
       rewardModal.setAttribute("aria-hidden", "false");
+      closeRewardBtn.focus();
       runStickers(30);
+      announce(title + ". " + desc);
     }
 
     function updateChallenge() {
@@ -1261,15 +1316,23 @@
     document.getElementById("changeText").addEventListener("click", () => {
       if (!requireParentAccess()) return;
       const userText = prompt("Enter your fun message:");
-      if (!userText) return alert("Please enter text.");
+      if (!userText) {
+        announce("Please enter text.");
+        return;
+      }
       animateMessage(userText);
+      announce("Message updated.");
     });
 
     document.getElementById("fontStyle").addEventListener("click", () => {
       if (!requireParentAccess()) return;
       const style = prompt("Enter font style: normal, italic, oblique");
-      if (!style) return alert("Please enter a font style.");
+      if (!style) {
+        announce("Please enter a font style.");
+        return;
+      }
       body.style.fontStyle = style.toLowerCase();
+      announce("Font style updated to " + style.toLowerCase() + ".");
     });
 
     document.getElementById("surprise").addEventListener("click", () => {
@@ -1325,6 +1388,15 @@
       } else if (activeMood === "angry") {
         animateMessage("Use Play Mood Game button for calm taps.");
       }
+    });
+
+    starFocusables.forEach((target) => {
+      target.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          target.click();
+        }
+      });
     });
 
     star.addEventListener("click", () => {
@@ -1411,24 +1483,50 @@
     parentModeBtn.addEventListener("click", () => {
       if (!parentMode) {
         const newPin = prompt("Set Parent PIN (4+ chars):");
-        if (!newPin || newPin.length < 4) return alert("PIN must be at least 4 characters.");
+        if (!newPin || newPin.length < 4) {
+          announce("PIN must be at least 4 characters.");
+          return;
+        }
         parentPin = newPin;
         parentMode = true;
         setParentModeLabel();
-        alert("Parent mode enabled.");
+        announce("Parent mode enabled.");
         return;
       }
       const entered = prompt("Enter PIN to disable Parent Mode:");
-      if (!entered || entered !== parentPin) return alert("Wrong PIN.");
+      if (!entered || entered !== parentPin) {
+        announce("Wrong PIN.");
+        return;
+      }
       parentMode = false;
       parentPin = "";
       setParentModeLabel();
-      alert("Parent mode disabled.");
+      announce("Parent mode disabled.");
     });
 
-    document.getElementById("closeReward").addEventListener("click", () => {
-      rewardModal.classList.remove("show");
-      rewardModal.setAttribute("aria-hidden", "true");
+    closeRewardBtn.addEventListener("click", closeRewardModal);
+
+    rewardModal.addEventListener("click", (event) => {
+      if (event.target === rewardModal) closeRewardModal();
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && rewardModal.classList.contains("show")) {
+        closeRewardModal();
+      }
+      if (event.key === "Tab" && rewardModal.classList.contains("show")) {
+        const focusables = rewardModal.querySelectorAll("button, [href], input, select, textarea, [tabindex]:not([tabindex='-1'])");
+        if (!focusables.length) return;
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      }
     });
 
     window.addEventListener("resize", moveStar);
