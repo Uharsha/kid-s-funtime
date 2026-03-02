@@ -644,6 +644,14 @@
       .game-top {
         justify-content: flex-start;
       }
+
+      #parentModeBtn,
+      #autoVoiceBtn,
+      .animal-btn[data-animal="lion"] {
+        grid-column: 1 / -1;
+        justify-self: center;
+        width: min(340px, 100%);
+      }
     }
 
     @media (max-width: 420px) {
@@ -657,6 +665,16 @@
 
       .play-area {
         height: 180px;
+      }
+    }
+
+    @media (max-width: 740px) {
+      #parentModeBtn,
+      #autoVoiceBtn,
+      .animal-btn[data-animal="lion"] {
+        grid-column: 1 / -1;
+        justify-self: center;
+        width: min(320px, 100%);
       }
     }
 
